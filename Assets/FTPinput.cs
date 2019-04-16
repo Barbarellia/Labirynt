@@ -16,6 +16,10 @@ public class FTPinput : MonoBehaviour
         _charController = GetComponent<CharacterController>();
     }
 
+    [SerializeField] private AudioSource soundSource;
+    [SerializeField] private AudioClip footStep;
+    private bool isStep = false;
+
     // Update is called once per frame
     void Update()
     {
@@ -30,5 +34,18 @@ public class FTPinput : MonoBehaviour
 
         movement = transform.TransformDirection(movement);
         _charController.Move(movement);
+
+        if(!isStep&&(deltaX>0|| deltaY>0))
+        {
+            StartCoroutine(Step());
+        }
+
+        IEnumerator Step()
+        {
+            isStep = true;
+            soundSource.PlayOneShot(footStep);
+            yield return new WaitForSeconds(0.5f);
+            isStep = false;
+        }
     }
 }
